@@ -68,7 +68,6 @@ std::vector<std::vector<int> > clarify(std::vector<std::vector<int> > &res, int 
 }
 
 std::string vec_to_str(std::vector<int> inp){
-	std::cout << "sze" << inp.size() << std::endl;
 	std::string str = "";
 	for(int i = 0; i < inp.size(); ++i){
 		str += std::to_string(inp[i]);
