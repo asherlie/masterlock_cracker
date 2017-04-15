@@ -65,13 +65,14 @@ std::vector<std::vector<int> > clarify(std::vector<std::vector<int> > &res, int 
 	res[1] = second_clarified;
 	res[2] = third_final;
 	return res;
-
-
 }
+
 std::string vec_to_str(std::vector<int> inp){
+	std::cout << "sze" << inp.size() << std::endl;
 	std::string str = "";
 	for(int i = 0; i < inp.size(); ++i){
-		str += (std::to_string(inp[i]) + ", ");
+		str += std::to_string(inp[i]);
+		if(i != inp.size()-1)str += ", ";
 	}
 	return str;
 }
