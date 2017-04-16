@@ -61,7 +61,7 @@ std::vector<std::vector<int> > find_digits(int resistance, int first, int second
 
 }
 
-std::vector<std::vector<int> > clarify(std::vector<std::vector<int> > &res, int final_third){
+void clarify(std::vector<std::vector<int> > &res, int final_third){
 	int num_to_remove = 0;
 	std::vector<int> second_clarified;
 	std::vector<int> third_final;
@@ -73,7 +73,6 @@ std::vector<std::vector<int> > clarify(std::vector<std::vector<int> > &res, int 
 	}
 	res[1] = second_clarified;
 	res[2] = third_final;
-	return res;
 }
 
 std::string vec_to_str(std::vector<int> inp){
@@ -91,6 +90,7 @@ int main(int argc, char* argv[]){
 		if(argc > 4){
 			clarify(res, std::stoi(argv[4]));
 		}
-		std::cout << "first: " << vec_to_str(res[0]) << "\nsecond: " << vec_to_str(res[1]) << "\nthird: " << vec_to_str(res[2]) << std::endl;
+		std::cout << "First: " << vec_to_str(res[0]) << "\nSecond: " << vec_to_str(res[1]) << "\nThird: " << vec_to_str(res[2]) << std::endl;
+		if(argc == 4)std::cout << "To clarify results, re-run this program with the correct third digit as the fourth input" << std::endl;
 	}
 }
