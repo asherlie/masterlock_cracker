@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 std::vector<std::vector<int> > find_digits(int resistance, int first, int second){
 	int first_digit;
@@ -38,7 +39,6 @@ std::vector<std::vector<int> > find_digits(int resistance, int first, int second
 		if(((sec%4)) == third[0] % 4)secc.push_back(sec + 2);
 	}
 
-	//int ret[3][1];
 	std::vector<std::vector<int> > ret;
 	ret.resize(3);
 	ret[0].push_back(first_digit);
@@ -47,6 +47,15 @@ std::vector<std::vector<int> > find_digits(int resistance, int first, int second
 	}
 	for(int i = 0; i < third.size(); ++i){
 		ret[2].push_back(third[i]);		
+	}
+	// replace nums above 40 and sort vectors
+	for(int i = 0; i < 3; ++i){
+		for(int j = 0; j < ret[i].size(); ++j){
+			if(ret[i][j] >= 40){
+				ret[i][j] = ret[i][j] - 40;
+			}
+		}
+		std::sort(ret[i].begin(), ret[i].end());
 	}
 	return ret;
 
