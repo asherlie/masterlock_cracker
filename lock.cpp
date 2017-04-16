@@ -40,7 +40,10 @@ std::vector<std::vector<int> > find_digits(int resistance, int first_lock, int s
 	if(third.empty()){
 		return ret;
 	}
-
+	//remove duplicates from third array
+	std::vector<int>::iterator  it = std::unique(third.begin(), third.end());
+	third.erase(it, third.end());
+			
 	for(int sec = 0; sec < 40; ++sec){
 		if((sec%4) == (third[0] % 4))second.push_back(sec + 2);
 	}
