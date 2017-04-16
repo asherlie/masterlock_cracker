@@ -4,6 +4,8 @@
 #include <algorithm>
 
 std::vector<std::vector<int> > find_digits(int resistance, int first, int second){
+	std::vector<std::vector<int> > ret; ret.resize(3);
+	//i resize here to avoid a seg fault 
 	int first_digit;
 	std::vector<int> third, secc;
 
@@ -26,7 +28,7 @@ std::vector<std::vector<int> > find_digits(int resistance, int first, int second
 			third_possible.push_back(i);
 		}
 	}
-	
+//cosolidate these two loops	
 	for(int i = 0; i < third_possible.size(); ++i){
 		for(int j = 0; j < 8; ++j){
 			if(third_possible[i] == locks[j]){
@@ -34,13 +36,15 @@ std::vector<std::vector<int> > find_digits(int resistance, int first, int second
 			}
 		}
 	}
+	//if no viable third element has been found the user has made a mistake
+	if(third.empty()){
+		return ret;
+	}
 
 	for(int sec = 0; sec < 40; ++sec){
 		if(((sec%4)) == third[0] % 4)secc.push_back(sec + 2);
 	}
 
-	std::vector<std::vector<int> > ret;
-	ret.resize(3);
 	ret[0].push_back(first_digit);
 	for(int i = 0; i < secc.size(); ++i){
 		ret[1].push_back(secc[i]);
@@ -83,14 +87,21 @@ std::string vec_to_str(std::vector<int> inp){
 	}
 	return str;
 }
+
+bool is_viable_dig(std::vector<std::vector<int> > vec){
+	return !(vec[0].empty() || vec[1].empty() || vec[2].empty());
+}
 int main(int argc, char* argv[]){
 	if(argc < 4)return -1;
 	if(argc >= 4){
 		std::vector<std::vector<int> > res = find_digits(std::stoi(argv[1]), std::stoi(argv[2]), std::stoi(argv[3]));
-		if(argc > 4){
-			clarify(res, std::stoi(argv[4]));
+		if(!is_viable_dig(res))std::cout << "Something went wrong. Double check your measurements" << std::endl;
+		else{
+			if(argc > 4){
+				clarify(res, std::stoi(argv[4]));
+			}
+			std::cout << "First: " << vec_to_str(res[0]) << "\nSecond: " << vec_to_str(res[1]) << "\nThird: " << vec_to_str(res[2]) << std::endl;
+			if(argc == 4)std::cout << "To clarify results, re-run this program with the correct third digit as the fourth input" << std::endl;
 		}
-		std::cout << "First: " << vec_to_str(res[0]) << "\nSecond: " << vec_to_str(res[1]) << "\nThird: " << vec_to_str(res[2]) << std::endl;
-		if(argc == 4)std::cout << "To clarify results, re-run this program with the correct third digit as the fourth input" << std::endl;
 	}
 }
