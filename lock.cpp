@@ -22,10 +22,12 @@ std::vector<std::vector<int> > find_digits(int resistance, int first_lock, int s
 		}
 	}
 	//numbers from 0 - 39 that are the same  %4 as the first digit%4
+	//are possible values third digit and these numbers + 2 for second
 	std::vector<int> third_possible;
 	for(int i = 0; i < 40; ++i){
 		if(i%4 == first_mod_4){
 			third_possible.push_back(i);
+			second.push_back(i + 2);
 		}
 	}
 	//cross reference nums that are the same %4 with locks[]
@@ -43,19 +45,11 @@ std::vector<std::vector<int> > find_digits(int resistance, int first_lock, int s
 	//remove duplicates from third array
 	std::vector<int>::iterator  it = std::unique(third.begin(), third.end());
 	third.erase(it, third.end());
-			
-	for(int sec = 0; sec < 40; ++sec){
-		if((sec%4) == (third[0] % 4))second.push_back(sec + 2);
-	}
 
 	ret[0].push_back(first_digit);
-	for(int i = 0; i < second.size(); ++i){
-		ret[1].push_back(second[i]);
-	}
-	for(int i = 0; i < third.size(); ++i){
-		ret[2].push_back(third[i]);		
-	}
-	// replace nums above 40 and sort vectors
+	ret[1] = second;
+	ret[2] = third;
+	// replace nums above 39 and sort vectors
 	for(int i = 0; i < 3; ++i){
 		for(int j = 0; j < ret[i].size(); ++j){
 			if(ret[i][j] >= 40){
@@ -65,7 +59,6 @@ std::vector<std::vector<int> > find_digits(int resistance, int first_lock, int s
 		std::sort(ret[i].begin(), ret[i].end());
 	}
 	return ret;
-
 }
 
 void clarify(std::vector<std::vector<int> > &res, int final_third){
