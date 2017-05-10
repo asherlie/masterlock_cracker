@@ -2,7 +2,7 @@ fun lock_magic(in_list) =
 	let
 		fun find_digits(resistance : int, first_lock : int, second_lock : int) = 
 			let
-				val first_digit = resistance + 5
+				val first_digit = (fn n => if n >= 40 then n-40 else n)(resistance + 5)
 				val first_mod_4 = first_digit mod 4
 
 				fun lock_list(n) = 
@@ -30,12 +30,11 @@ fun lock_magic(in_list) =
 						cons_list(0)
 					end
 				val third_possible = same_mod4()
-				fun ad2 n = n + 2
-				val second_ops = map ad2 third_possible
+				val second_ops = map(fn n => n + 2) third_possible
 					
 				fun cross_ref() = 
 					let
-						fun is_member(el, lst) = 
+						fun is_member(el : int, lst) = 
 							case lst of
 								[]   => false
 							|	x::y => x = el orelse is_member(el, y)
@@ -47,26 +46,24 @@ fun lock_magic(in_list) =
 						cons_list(third_possible)
 					end
 				val locks_mod4 = cross_ref()
-
+				val rep_40 = map(fn n => if n >= 40 then n-40 else n)
 			in
-					(* TODO: deal w/ numbers >= 40*)
-				(first_digit, second_ops, locks_mod4)
+				(first_digit, rep_40 second_ops, rep_40 locks_mod4)
 			end
 
-			fun clarify((x, y, z), correct_third) = 
-				let
-					fun fot(a,b,c) = a
-					fun win2(i, j) = i+2 = j orelse i-2 = j
-					fun cons_list lst =
-						case lst of
-							[]   => []
-						|	x::y => if win2(x, correct_third) then cons_list(y) else x::cons_list(y)
-				in
-					(x, cons_list y, [correct_third])
-				end
+		fun clarify((x, y, z), correct_third) = 
+			let
+				fun fot(a,b,c) = a
+				fun win2(i, j) = i+2 = j orelse i-2 = j
+				fun cons_list lst =
+					case lst of
+						[]   => []
+					|	x::y => if win2(x, correct_third) then cons_list(y) else x::cons_list(y)
+			in
+				(x, cons_list y, [correct_third])
+			end
 	in
 		case in_list of
 			(x, y, z, ~1)    => (find_digits(x,y,z))
 		|	(x, y, z, q : int) => (clarify(find_digits(x, y, z), q))
 	end
-
