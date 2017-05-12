@@ -32,8 +32,8 @@ find_digits(resistance, first_lock, second_lock) =
 						filter is_mem_a lst_b
 			in
 				cross_ref(lock_pos, third_possible)
-	in
-		([first_digit], second_ops, cross_referenced)
+	in   {- only need to be careful abt second_ops - first_digit already handled & cr exists in [0..39] -}
+		([first_digit], (\lst -> if last lst == 40 then 0:init(lst) else lst)(second_ops), cross_referenced)
 
 clarify :: (([Integer], [Integer], [Integer]), Integer) -> ([Integer], [Integer], [Integer])
 clarify((first_digit, second, third), correct_third) =
