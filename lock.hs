@@ -1,5 +1,5 @@
 import System.Environment
-find_digits :: (Integer, Integer, Integer) -> (Integer, [Integer], [Integer])
+find_digits :: (Integer, Integer, Integer) -> ([Integer], [Integer], [Integer])
 find_digits(resistance, first_lock, second_lock) =
 	let
 		first_digit = (\n -> if n >= 40 then n-40 else n)(resistance + 5)
@@ -33,20 +33,37 @@ find_digits(resistance, first_lock, second_lock) =
 			in
 				cross_ref(lock_pos, third_possible)
 	in
-		(first_digit, second_ops, cross_referenced)
-clarify :: ((Integer, [Integer], [Integer]), Integer) -> (Integer, [Integer], Integer)
+		([first_digit], second_ops, cross_referenced)
+
+clarify :: (([Integer], [Integer], [Integer]), Integer) -> ([Integer], [Integer], [Integer])
 clarify((first_digit, second, third), correct_third) =
 	let
 		wout_2 = filter(\n -> n+2 /= correct_third && n-2 /= correct_third) second
 	in
-		(first_digit, wout_2, correct_third)		
+		(first_digit, wout_2, [correct_third])		
+		
+pretty_print(x, y, z) =
+	let
+		pp(lst) =
+			case lst of
+				[]   -> "\nsomething has gone horribly wrong"
+				x:[] -> show(x)
+				x:y  -> show(x) ++ ", " ++ pp(y)
+	in
+		do
+			putStrLn("first: "  ++ pp(x))
+			putStrLn("second: " ++ pp(y))
+			putStrLn("third: "  ++ pp(z))
 
 main = 
 	do 
 		a <- getArgs
 		if length a == 3 then 
-			print(find_digits((\(x:y:z:xs) -> (x,y,z)) (map(read::String->Integer) a) )) 
+			if (\(x:y:z:xs) -> (x >= 40 || y >= 40 || z >= 40) || (x == y && y == z) || ((odd x && odd y && odd z) || (even x && even y && even z)) ) ((map(read::String->Integer)) a) then 
+				putStrLn("something has gone horribly wrong") 
+			else
+				pretty_print(find_digits((\(x:y:z:xs) -> (x,y,z)) (map(read::String->Integer) a) )) 
 		else 
 			if length a == 4 then 
-				print(clarify(find_digits((\(x:y:z:xs) -> (x,y,z)) (map(read::String->Integer) a) ), read (last a) :: Integer)) 
-			else print("you fucked up")
+				pretty_print(clarify(find_digits((\(x:y:z:xs) -> (x,y,z)) (map(read::String->Integer) a) ), read (last a) :: Integer)) 
+			else putStrLn("this program takes only 3 or 4 arguments")
