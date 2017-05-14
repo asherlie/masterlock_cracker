@@ -3,7 +3,6 @@ find_digits :: (Integer, Integer, Integer) -> ([Integer], [Integer], [Integer])
 find_digits(resistance, first_lock, second_lock) =
 	let
 		first_digit = (\n -> if n >= 40 then n-40 else n)(resistance + 5)
-		first_mod_4 = mod first_digit 4
 		
 		lock_pos :: [Integer]
 		lock_pos =
@@ -16,7 +15,8 @@ find_digits(resistance, first_lock, second_lock) =
 						_ -> (gen_lock_spots(spot-1)+10)
 			in
 				map gen_lock_spots [0..7]
-		third_possible = filter (\n -> mod n 4 == first_mod_4) [0..39]
+		third_possible = filter (\n -> mod n 4 == (mod first_digit 4) ) [0..39]
+		{- TODO: find case that makes the third options empty -}
 		second_ops = map(+2) third_possible
 		cross_referenced :: [Integer]
 		cross_referenced =
