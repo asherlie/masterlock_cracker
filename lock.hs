@@ -9,7 +9,7 @@ find_digits(resistance, first_lock, second_lock) =
 		lock_pos =
 			let
 				gen_lock_spots :: Integer -> Integer
-				gen_lock_spots spot =
+				gen_lock_spots spot = {-if spot == 0 then first_lock else if spot == 4 then second_lock else gen_lock_spots(spot-1)+10-}
 					case spot of
 						0 -> first_lock
 						4 -> second_lock
@@ -46,7 +46,7 @@ pretty_print(x, y, z) =
 	let
 		pp(lst) =
 			case lst of
-				[]   -> "\nsomething has gone horribly wrong"
+				[]   -> "\nsomething has gone horribly wrong (this is not a bug in the code)"
 				x:[] -> show(x)
 				x:y  -> show(x) ++ ", " ++ pp(y)
 	in
@@ -58,12 +58,11 @@ pretty_print(x, y, z) =
 main = 
 	do 
 		a <- getArgs
-		if (\(x:y:z:xs) -> (x >= 40 || y >= 40 || z >= 40) || (x == y && y == z) || ((odd x && odd y && odd z) || (even x && even y && even z)) ) ((map(read::String->Integer)) a) then 
-			putStrLn("something has gone horribly wrong") 
-		else
-			if length a == 3 then 
-					pretty_print(find_digits((\(x:y:z:xs) -> (x,y,z)) (map(read::String->Integer) a) )) 
-			else 
-				if length a == 4 then 
-					pretty_print(clarify(find_digits((\(x:y:z:xs) -> (x,y,z)) (map(read::String->Integer) a) ), read (last a) :: Integer)) 
-				else putStrLn("this program takes only 3 or 4 arguments")
+		case (map(read::String -> Integer) a) of
+			x:y:z:xs -> if ( ((x >= 40 || y >= 40 || z >= 40 || (case xs of {f:r -> f >= 40; [] -> False} ) ) || ((odd x && odd y && odd z) || (even x && even y && even z)) ) ) then 
+				putStrLn("something has gone horribly wrong (this is not a bug in the code)") 
+				else 
+					case xs of
+					f:r -> if r == [] then pretty_print(clarify(find_digits(x, y, z), f)) else putStrLn("something has gone horribly wrong (this is not a bug in the code)")
+					[] -> pretty_print(find_digits(x, y, z)) 
+			_        -> putStrLn("something has gone horribly wrong (this is not a bug in the code)") 
