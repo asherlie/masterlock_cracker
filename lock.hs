@@ -58,12 +58,12 @@ pretty_print(x, y, z) =
 main = 
 	do 
 		a <- getArgs
-		if length a == 3 then 
-			if (\(x:y:z:xs) -> (x >= 40 || y >= 40 || z >= 40) || (x == y && y == z) || ((odd x && odd y && odd z) || (even x && even y && even z)) ) ((map(read::String->Integer)) a) then 
-				putStrLn("something has gone horribly wrong") 
-			else
-				pretty_print(find_digits((\(x:y:z:xs) -> (x,y,z)) (map(read::String->Integer) a) )) 
-		else 
-			if length a == 4 then 
-				pretty_print(clarify(find_digits((\(x:y:z:xs) -> (x,y,z)) (map(read::String->Integer) a) ), read (last a) :: Integer)) 
-			else putStrLn("this program takes only 3 or 4 arguments")
+		if (\(x:y:z:xs) -> (x >= 40 || y >= 40 || z >= 40) || (x == y && y == z) || ((odd x && odd y && odd z) || (even x && even y && even z)) ) ((map(read::String->Integer)) a) then 
+			putStrLn("something has gone horribly wrong") 
+		else
+			if length a == 3 then 
+					pretty_print(find_digits((\(x:y:z:xs) -> (x,y,z)) (map(read::String->Integer) a) )) 
+			else 
+				if length a == 4 then 
+					pretty_print(clarify(find_digits((\(x:y:z:xs) -> (x,y,z)) (map(read::String->Integer) a) ), read (last a) :: Integer)) 
+				else putStrLn("this program takes only 3 or 4 arguments")
