@@ -17,6 +17,7 @@ find_digits(resistance, first_lock, second_lock) =
 				map gen_lock_spots [0..7]
 		third_possible = filter (\n -> mod n 4 == (mod first_digit 4) ) [0..39]
 		{- TODO: find case that makes the third options empty -}
+		{- 0 even 31 is always empty third. why? -}
 		second_ops = map(+2) third_possible
 		cross_referenced :: [Integer]
 		cross_referenced =
@@ -38,7 +39,7 @@ find_digits(resistance, first_lock, second_lock) =
 clarify :: (([Integer], [Integer], [Integer]), Integer) -> ([Integer], [Integer], [Integer])
 clarify((first_digit, second, third), correct_third) =
 	let
-		wout_2 = filter(\n -> n+2 /= correct_third && n-2 /= correct_third) second
+		wout_2 = filter(\n -> if n+2 == 40 then (n+2)-40 /= correct_third else if n-2 < 0 then (40+(n-2)) /= correct_third else n+2 /= correct_third && n-2 /= correct_third) second
 	in
 		(first_digit, wout_2, [correct_third])		
 		
@@ -46,7 +47,7 @@ pretty_print(x, y, z) =
 	let
 		pp(lst) =
 			case lst of
-				[]   -> "\nsomething has gone horribly wrong (this is not a bug in the code)"
+				[]   -> "\nthis should never happen. something has gone horribly wrong (ok, i admit it. this is a bug in the code)"
 				x:[] -> show(x)
 				x:y  -> show(x) ++ ", " ++ pp(y)
 	in
