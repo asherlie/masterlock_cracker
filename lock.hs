@@ -18,7 +18,7 @@ find_digits(resistance, first_lock, second_lock) =
 		third_possible = filter (\n -> mod n 4 == (mod first_digit 4) ) [0..39]
 		{- TODO: find case that makes the third options empty -}
 		{- 0 even 31 is always empty third. why? -}
-		second_ops = map(+2) third_possible
+		second_ops = (\lst -> if last lst == 41 then 1:init(lst) else lst) (map(+2) third_possible)
 		cross_referenced :: [Integer]
 		cross_referenced =
 			let
@@ -34,6 +34,7 @@ find_digits(resistance, first_lock, second_lock) =
 			in
 				cross_ref(lock_pos, third_possible)
 	in   {- only need to be careful abt second_ops - first_digit already handled & cr exists in [0..39] -}
+		{- only need to be handle 40 and 41, which is handled above bc i only map +2 over [0..39] -}
 		([first_digit], (\lst -> if last lst == 40 then 0:init(lst) else lst)(second_ops), cross_referenced)
 
 clarify :: (([Integer], [Integer], [Integer]), Integer) -> ([Integer], [Integer], [Integer])
