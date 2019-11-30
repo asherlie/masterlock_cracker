@@ -33,26 +33,12 @@ clarify((first_digit, second, _), correct_third) =
       in
             (first_digit, wout_2, [correct_third])            
             
-pretty_print :: ([Integer], [Integer], [Integer]) -> IO ()
-pretty_print(x, y, z) =
-      let
-            pp(lst) =
-                  case lst of
-                        []   -> "\nthis should never happen. something has gone horribly wrong (ok, i admit it. this is a bug in the code)"
-                        f:[] -> show(f)
-                        f:r  -> show(f) ++ ", " ++ pp(r)
-      in
-            do
-                  putStrLn("first: "  ++ pp(x))
-                  putStrLn("second: " ++ pp(y))
-                  putStrLn("third: "  ++ pp(z))
-
 fsth = ["first : ", "second: ", "third : "]
 p_tup :: (String, String) -> IO ()
 p_tup (x,y) = putStrLn (x ++ y)
 
-pp :: ([Integer], [Integer], [Integer]) -> IO [()]
-pp (a, b, c) = sequence (map p_tup (zip fsth (map (\xx -> (foldr (++) [] (map (\x -> if x == ',' then ", " else [x]) (init ( tail ( show xx)))))) [a,b,c])))
+pretty_print :: ([Integer], [Integer], [Integer]) -> IO [()]
+pretty_print (a, b, c) = sequence (map p_tup (zip fsth (map (\xx -> (foldr (++) [] (map (\x -> if x == ',' then ", " else [x]) (init ( tail ( show xx)))))) [a,b,c])))
 
 main :: IO ()
 main = 
@@ -64,10 +50,10 @@ main =
                         else 
                               case xs of
                               f:r -> if r == [] then do
-                                                       _ <- pp (clarify (find_digits (x, y, z), f))
+                                                       _ <- pretty_print (clarify (find_digits (x, y, z), f))
                                                        return ()
                                                 else putStrLn "something has gone horribly wrong (this is not a bug in the code)"
                               [] -> do
-                                      _ <- pp (find_digits (x,y,z))
+                                      _ <- pretty_print (find_digits (x,y,z))
                                       return ()
                   _        -> putStrLn("something has gone horribly wrong (this is not a bug in the code)") 
