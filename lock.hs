@@ -47,6 +47,13 @@ pretty_print(x, y, z) =
                   putStrLn("second: " ++ pp(y))
                   putStrLn("third: "  ++ pp(z))
 
+fsth = ["first : ", "second: ", "third : "]
+p_tup :: (String, String) -> IO ()
+p_tup (x,y) = putStrLn (x ++ y)
+
+pp :: ([Integer], [Integer], [Integer]) -> IO [()]
+pp (a, b, c) = sequence (map p_tup (zip fsth (map (\xx -> (foldr (++) [] (map (\x -> if x == ',' then ", " else [x]) (init ( tail ( show xx)))))) [a,b,c])))
+
 main :: IO ()
 main = 
       do 
@@ -56,6 +63,11 @@ main =
                         putStrLn("something has gone horribly wrong (this is not a bug in the code)") 
                         else 
                               case xs of
-                              f:r -> if r == [] then pretty_print(clarify(find_digits(x, y, z), f)) else putStrLn("something has gone horribly wrong (this is not a bug in the code)")
-                              [] -> pretty_print(find_digits(x, y, z)) 
+                              f:r -> if r == [] then do
+                                                       _ <- pp (clarify (find_digits (x, y, z), f))
+                                                       return ()
+                                                else putStrLn "something has gone horribly wrong (this is not a bug in the code)"
+                              [] -> do
+                                      _ <- pp (find_digits (x,y,z))
+                                      return ()
                   _        -> putStrLn("something has gone horribly wrong (this is not a bug in the code)") 
